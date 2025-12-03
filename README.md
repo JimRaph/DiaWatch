@@ -15,7 +15,7 @@ An AI-powered platform to perform comprehensive diabetes risk assessment, track 
 
 ---
 
-## ⚙️ Models Used
+## Models Used
 
 - Logistic Regression  
 - k-Nearest Neighbors (KNN)  
@@ -27,7 +27,7 @@ An AI-powered platform to perform comprehensive diabetes risk assessment, track 
 
 ---
 
-## 🛠️ Tools & Technologies
+## Tools & Technologies
 
 - **Backend:** Flask, Python, Jupyter Notebooks  
 - **Frontend:** Next.js, TypeScript  
@@ -37,7 +37,7 @@ An AI-powered platform to perform comprehensive diabetes risk assessment, track 
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 ```bash
