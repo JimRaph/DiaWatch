@@ -1,0 +1,4 @@
+Builder stage: has all the dev tooling (TypeScript, Next build, etc.). 
+It runs npm ci and npm run build to produce the compiled .next output.
+
+in production (the build artifacts + a minimal Node runtime). No dev deps, no source maps (unless you keep them), no compilers

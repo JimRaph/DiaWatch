@@ -1,0 +1,5 @@
+services:
+  backend:
+    command: gunicorn -w 4 -b 0.0.0.0:5000 scripts.app:app
+    environment:
+      - FLASK_ENV=production
