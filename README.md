@@ -1,4 +1,4 @@
-# DiWatch
+# DiaWatch
 
 An AI-powered platform to perform comprehensive diabetes risk assessment, track health habit, monitor activities that increases user risk of being diabetic. DiaWatch provides personalized insights and recommendations for better health management for the user.
  **Live App:** [Diabetes Prediction App](https://diawatch.fly.dev/)
