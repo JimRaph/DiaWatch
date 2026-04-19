@@ -1,0 +1,111 @@
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    entrypoint: /app/scripts/entrypoint.sh
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://diawatch:diawatch@db/diawatch
+      # - DATABASE_URL=${DATABASE_URL}
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      # - MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+      # - MLFLOW_TRACKING_USERNAME=${MLFLOW_TRACKING_USERNAME}
+      # - MLFLOW_TRACKING_PASSWORD=${MLFLOW_TRACKING_PASSWORD}
+      - MLFLOW_MODEL_NAME=DiaWatch_Medical_System
+      # - MLFLOW_MODEL_NAME=${MLFLOW_MODEL_NAME}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/model:/app/model
+      - ./backend/scripts:/app/scripts
+      - ./backend/alembic.ini:/app/alembic.ini
+      - ./backend/alembic:/app/alembic
+      - mlflow_data:/mlflow/artifacts
+      - ./backend/monitoring_reports:/tmp/monitoring
+    command: uvicorn scripts.app:app --host 0.0.0.0 --port 8000 --reload #remove for production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      db:
+        condition: service_healthy
+      mlflow:
+        condition: service_started
+    restart: unless-stopped
+
+  # Local PostgreSQL for development (replace with Neon in production)
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: diawatch
+      POSTGRES_PASSWORD: diawatch
+      POSTGRES_DB: diawatch
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U diawatch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # MLflow tracking server (optional local setup)
+  mlflow:
+    build:
+      context: ./backend
+      dockerfile: mlflow.Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://diawatch:diawatch@db/diawatch
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+      - MLFLOW_SERVER_ALLOWED_HOSTS=*
+    volumes:
+      - mlflow_data:/mlflow/artifacts
+    command: >
+      mlflow server 
+      --backend-store-uri postgresql://diawatch:diawatch@db/diawatch
+      --default-artifact-root /mlflow/artifacts
+      --host 0.0.0.0
+      --port 5000
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+
+  frontend:
+    build: 
+      context: ./client 
+      dockerfile: dockerfile
+    user: "root"
+    command: sh -c "mkdir -p /app/.next && chmod 777 /app/.next && npm run devo"
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NEXT_DEV_TURBO_POLLING=true
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  mlflow_data:

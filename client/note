@@ -2,3 +2,7 @@ Builder stage: has all the dev tooling (TypeScript, Next build, etc.).
 It runs npm ci and npm run build to produce the compiled .next output.
 
 in production (the build artifacts + a minimal Node runtime). No dev deps, no source maps (unless you keep them), no compilers
+clean up the cookie setup (body input was for outside browser testing and in prod we still with cookie)
+fix the switch case statement in resultmodal after testing
+Complete the registration and link_guest setup when back
+switch from integer to uuid/string later if I decided to include it in url

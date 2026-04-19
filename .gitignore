@@ -14,6 +14,7 @@ __pycache__/
 *.py[cod]
 *.env
 venv/
+.venv/
 .env
 *.pyc
 *.pyo
@@ -30,3 +31,14 @@ docker-compose.override.yml
 # OS
 Thumbs.db
 *kaggle.json
+
+
+backend/mlruns/
+backend/catboost_info/
+backend/ray_results/
+backend/monitoring_results/
+backend/monitoring_cache/
+
+client/.next/
+client/node_modules/
+client/.env.local
