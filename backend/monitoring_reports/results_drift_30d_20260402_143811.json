@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-04-02T14:38:09.506938+00:00",
+  "reference_samples": 15300,
+  "drift": {
+    "status": "success",
+    "production_samples": 20,
+    "is_drifting": false,
+    "drift_share": 0,
+    "drifted_columns": 0
+  },
+  "performance": {
+    "status": "skipped"
+  }
+}

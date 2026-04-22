@@ -10,7 +10,12 @@ interface NotesModalProps {
   entryDate: string;
 }
 
-export function NotesModal({ isOpen, onClose, healthNotes, entryDate }: NotesModalProps) {
+export function NotesModal({
+  isOpen,
+  onClose,
+  healthNotes,
+  entryDate,
+}: NotesModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -28,7 +33,6 @@ export function NotesModal({ isOpen, onClose, healthNotes, entryDate }: NotesMod
             className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden border border-gray-200 dark:border-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
-
             <div className="p-6 border-b border-gray-200 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div>
@@ -49,14 +53,19 @@ export function NotesModal({ isOpen, onClose, healthNotes, entryDate }: NotesMod
             </div>
 
             <div className="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
-              <div className="prose prose-slate dark:prose-invert max-w-none">
-                {healthNotes.split('\n').map((paragraph, index) => (
-                  <p key={index} className="mb-4 last:mb-0 text-gray-700 dark:text-gray-300">
-                    {paragraph || <span className="text-gray-400 italic">(Empty line)</span>}
+              <div className="prose prose-gray dark:prose-invert max-w-none">
+                {healthNotes.split("\n").map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className="mb-4 last:mb-0 text-gray-700 dark:text-gray-300"
+                  >
+                    {paragraph || (
+                      <span className="text-gray-400 italic">(Empty line)</span>
+                    )}
                   </p>
                 ))}
               </div>
-              
+
               {!healthNotes.trim() && (
                 <div className="text-center py-12 text-gray-500 dark:text-gray-400 italic">
                   No health notes provided for this entry.
@@ -67,7 +76,7 @@ export function NotesModal({ isOpen, onClose, healthNotes, entryDate }: NotesMod
             <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 flex justify-end">
               <button
                 onClick={onClose}
-                className="px-6 py-2 bg-gradient-to-r from-teal-500 to-sky-500 text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                className="px-6 py-2 bg-teal-500 text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
               >
                 Close
               </button>

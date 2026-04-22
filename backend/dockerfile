@@ -1,17 +1,39 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
 
-WORKDIR /app
 
+RUN useradd -m -u 1000 user
+USER user
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH
+
+WORKDIR $HOME/app
+
+USER root
 RUN apt-get update && apt-get install -y \
-    build-essential \
+    gcc \
+    curl \
+    libpq-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
+USER user
 
-COPY requirements.txt .
+COPY --chown=user:user requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY --chown=user:user scripts/ ./scripts/
+COPY --chown=user:user data/ ./data/
+COPY --chown=user:user model/ ./model/
 
-EXPOSE 5000
 
-CMD ["python", "scripts/app.py"]
+ENV PYTHONPATH=$HOME/app:$HOME/app/scripts
+ENV PYTHONUNBUFFERED=1
+
+
+EXPOSE 7860
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:7860/health || exit 1
+
+
+CMD ["uvicorn", "scripts.app:app", "--host", "0.0.0.0", "--port", "7860"]

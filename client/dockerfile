@@ -1,21 +1,41 @@
-FROM node:20-slim AS builder
+# FROM node:20-slim AS builder
+
+# WORKDIR /app
+
+# COPY package.json package-lock.json ./
+# RUN npm install
+
+# ARG NEXT_PUBLIC_API_URL
+# ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+# COPY . .
+# RUN npm run build
+
+# FROM node:20-slim
+# WORKDIR /app
+
+# COPY --from=builder /app ./
+
+# EXPOSE 3000
+# # CMD ["npm", "dev"] local development
+# CMD ["npm", "start"]
+
+FROM node:20-slim
 
 WORKDIR /app
 
+# Install dependencies first (cached layer)
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Copy the rest of the files
+COPY . .
+
+# Set the API URL for the build process (Next.js needs this at build/dev time)
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-COPY . .
-RUN npm run build
-
-FROM node:20-slim
-WORKDIR /app
-
-COPY --from=builder /app ./
-
 EXPOSE 3000
-# CMD ["npm", "dev"] local development
-CMD ["npm", "start"]
+
+# Standard dev command
+CMD ["npm", "run", "dev"]

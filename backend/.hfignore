@@ -1,0 +1,20 @@
+# Exclude development and config clutter
+alembic/
+.ruff_cache/
+tests/
+.env
+.pytest_cache/
+migrations/
+mlruns
+model
+ray_results
+alembic
+.pre-commit-config.yml 
+analysis.ipynb
+analysis.py
+mlflow.notebook.db 
+notebook.ipynb
+environment.yml 
+mlflow.Dockerfile
+output.png 
+entrypoint.sh

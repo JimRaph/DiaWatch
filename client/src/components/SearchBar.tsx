@@ -8,9 +8,9 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-export function SearchBar({ 
-  onSearch, 
-  placeholder = "Search by notes or values..." 
+export function SearchBar({
+  onSearch,
+  placeholder = "Search by notes or values...",
 }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -45,10 +45,7 @@ export function SearchBar({
           </button>
         )}
       </div>
-      <button
-        type="submit"
-        className="hidden"
-      >
+      <button type="submit" className="hidden">
         Search
       </button>
     </form>

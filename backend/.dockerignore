@@ -1,3 +1,6 @@
 fly.toml
 kaggle.json
 virtenv
+*.pkl 
+*.cbm
+*.parquet

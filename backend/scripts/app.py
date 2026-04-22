@@ -1,131 +1,174 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import pickle
-import numpy as np
-import pandas as pd
-from dotenv import load_dotenv
 import os
+import contextvars
+from uuid6 import uuid7
 import logging
-import shap
+from contextlib import asynccontextmanager
+# from typing import Dict, Any, List, Optional
 
-load_dotenv()
-
-app = Flask(__name__)
-
-CORS(app, origins=os.getenv('CLIENT_URL', 'http://localhost:3000'), supports_credentials=True)
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(BASE_DIR, "model", "diabetes.sav")
-
-try:
-    with open(MODEL_PATH, 'rb') as f:
-        loaded_model = pickle.load(f)
-    explainer = shap.TreeExplainer(loaded_model)
-    
-    FEATURE_NAMES = [
-        "Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
-        "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"
-    ]
-except Exception as e:
-    logging.error(f"Failed to load model or initialize SHAP: {e}")
-    raise RuntimeError("Model loading failed. Check the model file and path.")
+# from fastapi import FastAPI, Depends, BackgroundTasks, HTTPException, \
+# Request, status, Cookie, Response
+# from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.responses import JSONResponse
+# from sqlalchemy.orm import Session
+# from sqlalchemy.exc import SQLAlchemyError
+# from sqlalchemy import func
+# from fastapi import FastAPI, Request, status, HTTPException
+# from fastapi.middleware.cors import CORSMiddleware
+# import mlflow
 
 
-def generate_recommendations(prediction_class, shap_explanations):
-    recs = []
-    
-    positive_drivers = sorted([
-        e for e in shap_explanations if e['value'] > 0
-    ], key=lambda x: x['value'], reverse=True)
-    
-    if prediction_class == 1:
-        recs.append("Consult a healthcare professional for clinical verification and next steps, focusing on lifestyle changes.")
-    else:
-        recs.append("Your results suggest a low probability of diabetes. Maintain your healthy habits and consider annual screening.")
-        
-    for driver in positive_drivers[:3]:
-        feature = driver['feature']
-        
-        if feature == 'Glucose':
-            recs.append("Focus on low Glycemic Index (GI) foods. Limit refined sugars and starches to stabilize blood glucose.")
-        
-        elif feature == 'Insulin':
-            recs.append("High insulin contribution suggests potential insulin resistance. Implement regular, intensive physical activity to improve insulin sensitivity.")
-        
-        elif feature == 'BMI':
-            recs.append("Your BMI is a significant factor. Even a 5-10% reduction in body weight can drastically lower diabetes risk.")
-        
-        elif feature == 'Pregnancies':
-            recs.append("A history of multiple pregnancies increases risk. Ensure regular screenings (HbA1c) and maintain a healthy weight post-pregnancy.")
-            
-        elif feature == 'Age':
-            recs.append("Age is a non-modifiable risk. Focus on managing secondary risks like blood pressure and cholesterol actively.")
-        
-        elif feature == 'SkinThickness':
-            recs.append("Elevated Skin Thickness suggests fat distribution may be a risk. Combine aerobic training with resistance training for better body composition.")
+# from database import init_db, get_db, PredictionStore, MonitorStore, log_prediction_for_monitoring
+# from schema import DiaRequest, FeedbackRequest, HealthResponse, PredictionResponse
+# from inference import InferenceEngine, InferenceError
+# from recommendation import advisor, RecommendationError
 
-    return list(set(recs))
+# from auth import router as auth_router, get_current_user_optional, get_current_user_required
+# from database import User, SessionLocal
+# from database import init_db
+# from auth import router as auth_router
+# from endpoints import router as endpoints_router
+
+from fastapi import FastAPI, Request, status, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+import mlflow
+
+from database import init_db
+from schema import HealthResponse
+from inference import InferenceEngine
+from auth import router as auth_router
+from endpoints import router as endpoints_router
+
+request_id_context = contextvars.ContextVar("request_id", default="N/A")
 
 
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
+MLFLOW_MODEL_NAME = os.getenv("MLFLOW_MODEL_NAME", "DiaWatch_Medical_System")
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 
-@app.route('/', methods=['GET'])
-def home():
-    return 'DiaWatch Prediction API v1'
 
-@app.route('/diabetes/v1/predict', methods=['POST'])
-def predict():
+class RequestIdFilter(logging.Filter):
+    """Pulls the request_id from the async context variable."""
+
+    def filter(self, record):
+        record.request_id = request_id_context.get()
+        return True
+
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+
+root_logger.handlers.clear()
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] - %(message)s"
+)
+handler.setFormatter(formatter)
+handler.addFilter(RequestIdFilter())
+root_logger.addHandler(handler)
+
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan manager for startup/shutdown."""
+
+    logger.info("Starting up DiaWatch API...")
 
     try:
-        features_list = request.json 
-        if not isinstance(features_list, list) or len(features_list) != 8:
-            return jsonify({"success": False, "error": "Input must be a list of 8 numeric values"}), 400
-        
-        data = pd.DataFrame([features_list], columns=FEATURE_NAMES)
-        logging.error(f"data: {data}")
-        
-        prediction = loaded_model.predict(data)
-        logging.error(f"PREDICTION: {prediction}")
-        prediction_prob = loaded_model.predict_proba(data)[0]
-        logging.error(f"PREDICTION PROB: {prediction_prob}")
-        prediction_class = int(np.argmax(prediction_prob))
-        logging.error(f"PREDICTION CLASS: {prediction_class}")
-        confidence_score = round(np.max(prediction_prob) * 100, 2)
-        logging.error(f"PREDICTION CONF: {confidence_score}")
-        
-        shap_values_list_of_arrays = explainer.shap_values(data.iloc[0])        
-        logging.error(f"SHAP VALUES FULL: {shap_values_list_of_arrays}")
-        
-        shap_matrix = np.array(shap_values_list_of_arrays)
-        shap_for_class_array = shap_matrix[:, prediction_class]
-        logging.error(f"shap_for_class_array: {shap_for_class_array}")
-        
-        shap_explanation = [
-            {"feature": name, "value": float(shap_for_class_array[i])}
-            for i, name in enumerate(FEATURE_NAMES)
-        ]
-        
-        explanations = sorted(
-            shap_explanation, 
-            key=lambda x: abs(x['value']), 
-            reverse=True 
+        init_db()
+        logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.error(f"Database initialization failed: {e}")
+        raise
+
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+
+    try:
+        engine = InferenceEngine(model_name=MLFLOW_MODEL_NAME, stage="production")
+        engine.load()
+        app.state.inference_engine = engine
+        logger.info("Inference engine loaded successfully")
+    except Exception as e:
+        logger.error(f"Failed to load inference engine: {e}")
+        app.state.inference_engine = None
+
+    yield
+
+    logger.info("...DiaWatch API is shutting down...")
+
+
+app = FastAPI(
+    title="DiaWatch Production API",
+    description="Diabetes screening with ML inference and LLM recommendations",
+    version="2.0.0",
+    lifespan=lifespan,
+)
+
+app.include_router(auth_router)
+app.include_router(endpoints_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.middleware("http")
+async def add_request_id(request: Request, call_next):
+    """middleware to attach unique request ID for tracing"""
+    request_id = str(uuid7())
+    request.state.request_id = request_id
+
+    token = request_id_context.set(request_id)
+
+    try:
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request_id
+        return response
+    finally:
+        request_id_context.reset(token)
+
+
+@app.get("/health", response_model=HealthResponse)
+async def health_check(request: Request):
+
+    inference_engine = request.app.state.inference_engine
+
+    if inference_engine is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "status": "unhealthy",
+                "model_loaded": False,
+                "version": "unknown",
+                "error": "Inference engine not initialized",
+            },
         )
 
-        recommendations = generate_recommendations(prediction_class, explanations)
+    if not inference_engine.is_ready():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "status": "unhealthy",
+                "model_loaded": False,
+                "version": inference_engine.get_model_version(),
+                "error": "Model failed to load",
+            },
+        )
 
-        response = {
-            "prediction": prediction_class,
-            "confidence": confidence_score,
-            "explanations": explanations,
-            "recommendations": recommendations 
-        }
-        logging.error(f"RECOMMENDATION: {recommendations}")
-        logging.error(f"explanation: {explanations}")
-        return jsonify({"success": True, **response})
+    return HealthResponse(
+        status="healthy",
+        model_loaded=True,
+        version=inference_engine.get_model_version(),
+    )
 
-    except Exception as e:
-        logging.error(f"Prediction error: {e}")
-        return jsonify({"success": False, "error": "Internal server error during prediction."}), 500
 
-if __name__ == '__main__':
-    logging.info("Starting Flask application...")
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)

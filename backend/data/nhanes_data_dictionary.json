@@ -1,0 +1,10 @@
+{
+  "gender": "0=Male, 1=Female",
+  "age": "Years",
+  "bmi": "Body Mass Index",
+  "waist_circumference": "Waist circumference (cm)",
+  "race_ethnicity": "Self-reported race/ethnicity",
+  "family_history": "Family history of diabetes",
+  "target": "0=Healthy, 1=Prediabetes, 2=Diabetes",
+  "is_pregnant": "0=No, 1=Yes"
+}
