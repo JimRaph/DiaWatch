@@ -315,7 +315,7 @@ def train_and_evaluate(
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_path = os.path.join(base_dir, "data", "clean", "cleaned_nhanes_diabetes.csv")
+    data_path = os.path.join(base_dir, "data", "cleaned_nhanes_diabetes.csv")
     export_dir = os.path.join(
         base_dir, "exports", datetime.now().strftime("%Y%m%d_%H%M%S")
     )

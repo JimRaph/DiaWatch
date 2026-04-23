@@ -19,7 +19,8 @@ request_id_context = contextvars.ContextVar("request_id", default="N/A")
 
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
 MLFLOW_MODEL_NAME = os.getenv("MLFLOW_MODEL_NAME", "DiaWatch_Medical_System")
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+# CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+CORS_ORIGINS = os.getenv("CORS_ORIGINSS", "http://localhost:3000")
 
 
 class RequestIdFilter(logging.Filter):

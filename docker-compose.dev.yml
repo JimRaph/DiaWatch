@@ -3,7 +3,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: dockerfile.dev
     entrypoint: /app/scripts/entrypoint.sh
     ports:
       - "8000:8000"
@@ -27,7 +27,7 @@ services:
       - ./backend/alembic:/app/alembic
       - mlflow_data:/mlflow/artifacts
       - ./backend/monitoring_reports:/tmp/monitoring
-    command: uvicorn scripts.app:app --host 0.0.0.0 --port 8000 --reload #remove for production
+    command: uvicorn scripts.app:app --host 0.0.0.0 --port 8000 --reload 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s

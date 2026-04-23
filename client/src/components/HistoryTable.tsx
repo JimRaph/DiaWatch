@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { getConfidence } from "../util/indexedDB";
 import { CheckupEntry } from "../types/index";
 import { NotesModal } from "./NoteModal";
@@ -131,7 +131,7 @@ export function HistoryTable({
 
   console.log("Entry: ", entries);
   return (
-    <>
+    <Fragment>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
           <thead className="bg-gray-50 dark:bg-gray-800/50">
@@ -172,7 +172,7 @@ export function HistoryTable({
               const isPending = entry.verification_status === "pending";
 
               return (
-                <div>
+                <Fragment key={entry.prediction_id || idx}>
                   <tr
                     key={entry.prediction_id || idx}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
@@ -404,7 +404,7 @@ export function HistoryTable({
                       </td>
                     </tr>
                   )}
-                </div>
+                </Fragment>
               );
             })}
           </tbody>
@@ -423,6 +423,6 @@ export function HistoryTable({
         onClose={() => setSelectedMetrics(null)}
         entry={selectedMetrics!}
       />
-    </>
+    </Fragment>
   );
 }

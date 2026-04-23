@@ -16,6 +16,8 @@ COPY scripts/ ./scripts/
 COPY data/ ./data/
 COPY model/ ./model/
 
+RUN sed -i 's/\r$//' ./scripts/entrypoint.sh
+
 RUN chmod +x ./scripts/entrypoint.sh
 
 ENV PYTHONPATH=/app:/app/scripts

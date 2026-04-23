@@ -139,8 +139,10 @@ def register_user(
             key="refresh_token",
             value=refresh_token,
             httponly=True,
-            secure=False,
+            # secure=False,
+            secure=True,
             samesite="lax",
+            # samesite="none",
             max_age=7 * 24 * 60 * 60,
             path="/auth/refresh",
         )
@@ -178,8 +180,10 @@ def login(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=False,
-        samesite="lax",
+        # secure=False,
+        secure=True,
+        # samesite="lax",
+        samesite="none",
         max_age=7 * 24 * 60 * 60,
         path="/auth/refresh",
     )
@@ -196,7 +200,9 @@ def refresh_access_token(
     response: Response,
     request: Request,
     refresh_token: Optional[str] = Cookie(None),
-    refresh_token_body: Optional[RefreshTokenRequest] = Body(None),
+    refresh_token_body: Optional[RefreshTokenRequest] = Body(
+        None
+    ),  # this is for the test_api.py, off browser testing
     db: Session = Depends(get_db),
 ):
 

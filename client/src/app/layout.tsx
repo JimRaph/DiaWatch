@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
+import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "../context/AuthContext";
 
 const geistSans = Geist({
@@ -15,6 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  viewport:{
+    width:"device-width",
+    initialScale:1,
+    maximumScale:1,
+  },
   title: "DiaWatch - AI-Powered Diabetes Risk Assessment",
   description: `Professional AI-powered medical prediction tool for diabetes risk assessment. Get immediate, actionable insights into your health.
  track your habit, monitor your glucose and insulin level, bmi, skinthickness and history.`,
