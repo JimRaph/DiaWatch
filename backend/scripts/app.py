@@ -3,30 +3,6 @@ import contextvars
 from uuid6 import uuid7
 import logging
 from contextlib import asynccontextmanager
-# from typing import Dict, Any, List, Optional
-
-# from fastapi import FastAPI, Depends, BackgroundTasks, HTTPException, \
-# Request, status, Cookie, Response
-# from fastapi.middleware.cors import CORSMiddleware
-# from fastapi.responses import JSONResponse
-# from sqlalchemy.orm import Session
-# from sqlalchemy.exc import SQLAlchemyError
-# from sqlalchemy import func
-# from fastapi import FastAPI, Request, status, HTTPException
-# from fastapi.middleware.cors import CORSMiddleware
-# import mlflow
-
-
-# from database import init_db, get_db, PredictionStore, MonitorStore, log_prediction_for_monitoring
-# from schema import DiaRequest, FeedbackRequest, HealthResponse, PredictionResponse
-# from inference import InferenceEngine, InferenceError
-# from recommendation import advisor, RecommendationError
-
-# from auth import router as auth_router, get_current_user_optional, get_current_user_required
-# from database import User, SessionLocal
-# from database import init_db
-# from auth import router as auth_router
-# from endpoints import router as endpoints_router
 
 from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -166,6 +142,11 @@ async def health_check(request: Request):
         model_loaded=True,
         version=inference_engine.get_model_version(),
     )
+
+
+@app.get("/")
+async def root():
+    return "<h1>DiaWatch Production API</h1><p>Diabetes screening with ML inference and LLM recommendations</p>"
 
 
 if __name__ == "__main__":

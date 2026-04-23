@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir --user -r requirements.txt
 
 COPY --chown=user:user scripts/ ./scripts/
 COPY --chown=user:user data/ ./data/
-COPY --chown=user:user model/ ./model/
+# COPY --chown=user:user model/ ./model/
 
 
 ENV PYTHONPATH=$HOME/app:$HOME/app/scripts

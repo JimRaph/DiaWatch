@@ -42,3 +42,6 @@ backend/monitoring_cache/
 client/.next/
 client/node_modules/
 client/.env.local
+
+hf-deploy-temp/
+deploy.sh 

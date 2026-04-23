@@ -361,7 +361,7 @@ async def get_user_history(
     current_user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db),
     cursor: Optional[str] = None,
-    limit: int = 50,
+    limit: int = 20,
 ):
     query = db.query(PredictionStore).filter(PredictionStore.user_id == current_user.id)
 

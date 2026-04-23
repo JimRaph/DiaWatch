@@ -23,8 +23,8 @@ export function Pagination({
  const getPageNumbers = () => {
  const delta = 2;
  const range = [];
- const rangeWithDots = [];
- let l;
+ const rangeWithDots: (string | number)[] = [];
+ let l: number;
 
  for (let i = 1; i <= totalPages; i++) {
  if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
