@@ -141,8 +141,8 @@ def register_user(
             httponly=True,
             # secure=False,
             secure=True,
-            samesite="lax",
-            # samesite="none",
+            # samesite="lax",
+            samesite="none",
             max_age=7 * 24 * 60 * 60,
             path="/auth/refresh",
         )
