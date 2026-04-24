@@ -13,6 +13,7 @@ import mlflow
 import mlflow.catboost
 import mlflow.pyfunc
 from mlflow.models.signature import infer_signature
+from sklearn.experimental import enable_iterative_imputer  # noqa: F401
 from sklearn.impute import IterativeImputer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (

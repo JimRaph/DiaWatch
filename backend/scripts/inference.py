@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import shap
 from catboost import CatBoostClassifier
+from sklearn.experimental import enable_iterative_imputer  # noqa: F401
 from sklearn.impute import IterativeImputer
 
 logger = logging.getLogger(__name__)

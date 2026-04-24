@@ -78,8 +78,10 @@ async def predict(
                 key="guest_id",
                 value=guest_id,
                 httponly=True,
-                secure=False,
-                samesite="lax",
+                secure=True,
+                # secure=False,
+                samesite="none",
+                # samesite="lax",
                 max_age=60 * 60 * 24 * 30,
             )
 
