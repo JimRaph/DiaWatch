@@ -1,5 +1,4 @@
 "use client";
-
 import { Fragment, useState } from "react";
 import { getConfidence } from "../util/indexedDB";
 import { CheckupEntry } from "../types/index";
@@ -38,10 +37,12 @@ export function HistoryTable({
     notes: string;
     date: string;
   } | null>(null);
+
   const [selectedMetrics, setSelectedMetrics] = useState<CheckupEntry | null>(
     null
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
 
   const getTopRiskFactors = (entry: CheckupEntry, limit: number = 3) => {
     if (!entry.top_risk_factors) return [];
@@ -129,7 +130,7 @@ export function HistoryTable({
     setExpandedId(null);
   };
 
-  console.log("Entry: ", entries);
+  // console.log("Entry: ", entries);
   return (
     <Fragment>
       <div className="overflow-x-auto">

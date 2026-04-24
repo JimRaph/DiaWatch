@@ -196,14 +196,12 @@ async def submit_feedback(
                 detail="Not authorized to submit feedback for this prediction",
             )
 
-        # Check if already verified (either verified, corrected, or declined)
         if record.verification_status in ["verified", "corrected", "unverified"]:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Feedback already submitted for this prediction",
             )
 
-        # Determine verification status based on comparison
         if request.actual_class == record.prediction_class:
             record.verification_status = "verified"
         else:
@@ -212,7 +210,6 @@ async def submit_feedback(
         record.actual_class = request.actual_class
         record.feedback_timestamp = func.now()
 
-        # Update or create monitor record (existing logic)
         monitor_record = (
             db.query(MonitorStore)
             .filter(MonitorStore.prediction_id == request.prediction_id)
@@ -283,7 +280,7 @@ async def decline_verification(
         if record.verification_status != "pending":
             raise HTTPException(
                 400,
-                f"Cannot decline verification with status: {record.verification_status}",
+                detail=f"Cannot decline verification with status: {record.verification_status}",
             )
 
         record.verification_status = "unverified"

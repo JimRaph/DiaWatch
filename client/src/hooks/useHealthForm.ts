@@ -213,7 +213,7 @@ export function useHealthForm() {
       return response;
     } catch (err: any) {
       // console.error("submit error:", err);
-      // console.log("submit error:", err);
+      console.log("submit error:", err);
       setSubmitError(err.message || "Analysis failed. Please try again.");
       throw err;
     } finally {

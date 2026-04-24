@@ -29,7 +29,7 @@ export default function RegisterPage() {
       router.push(redirectTo);
       router.refresh();
     } catch (err: any) {
-      console.log(err?.response?.data?.detail || err.message);
+      // console.log(err?.response?.data?.detail || err.message);
       setError(err?.response?.data?.detail || err.message || "Registration failed");
     } finally {
       setLoading(false);

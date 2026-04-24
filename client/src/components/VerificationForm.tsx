@@ -44,7 +44,8 @@ export function VerificationForm({
 
       onSuccess(updated);
     } catch (err: any) {
-      setError(err.message || "Failed to submit verification");
+      // console.log("error: ", err.response?.data?.detail)
+      setError(err.response?.data?.detail || "Failed to submit verification");
     } finally {
       setLoading(false);
     }
@@ -56,7 +57,7 @@ export function VerificationForm({
       await api.declineVerification(entry.prediction_id);
       onDecline();
     } catch (err: any) {
-      setError(err.message || "Failed to decline");
+      setError(err.response?.data?.detail || "Failed to decline");
     } finally {
       setLoading(false);
     }

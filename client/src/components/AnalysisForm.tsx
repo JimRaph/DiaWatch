@@ -46,10 +46,10 @@ export function AnalysisForm({
     if (!isStep1Valid) {
       setSubmitError("");
       const missing = getMissingFields();
-      console.log("missing inpts: ", missing)
+      // console.log("missing inpts: ", missing)
       return;
     }
-    console.log("missing inpts: ", isStep1Valid);
+    // console.log("missing inpts: ", isStep1Valid);
     setSubmitError("");
     setStep(2);
   };

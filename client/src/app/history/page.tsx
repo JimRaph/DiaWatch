@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { HistoryProps, CheckupEntry } from "../../types/index";
+import { addCheckup } from "../../util/indexedDB";
 
 
 //  skeleton component
@@ -64,6 +65,7 @@ function HistoryContent() {
 
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
+
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
@@ -108,7 +110,7 @@ function HistoryContent() {
     try {
       setLoading(true);
       const data = await api.getHistory(nextCursor);
-      console.log("history data: ", data)
+      // console.log("history data: ", data)
       const mappedData = data.items.map(dataMapper);
 
       if (nextCursor) {
@@ -116,9 +118,7 @@ function HistoryContent() {
       } else {
         setHistory(mappedData);
         await Promise.all(
-          mappedData.map((item) =>
-            import("../../util/indexedDB").then((m) => m.addCheckup(item))
-          )
+          mappedData.map((item)  => addCheckup(item))
         );
       }
       setCursor(data.next_cursor);
@@ -195,9 +195,9 @@ function HistoryContent() {
                   h.confidence_scores,
                   h.prediction_label
                 );
-                console.log("h: ", h)
-                console.log("sum: ", sum, sum+conf)
-                console.log("conf: ", conf)
+                // console.log("h: ", h)
+                // console.log("sum: ", sum, sum+conf)
+                // console.log("conf: ", conf)
                 return sum + conf;
               }, 0) /
                 filteredHistory.length) *
@@ -217,8 +217,8 @@ function HistoryContent() {
     [filteredHistory]
   );
 
-console.log("stats: ", stats)
-console.log("filteredhistory: ", filteredHistory, history)
+// console.log("stats: ", stats)
+// console.log("filteredhistory: ", filteredHistory, history)
 
   const exportHistory = () => {
     const csv = [
@@ -381,6 +381,18 @@ console.log("filteredhistory: ", filteredHistory, history)
     );
   }
 
+  const handleEntryUpdate = async (updatedEntry: CheckupEntry) => {
+    const newEntries = filteredHistory.map((entry) =>
+      entry.prediction_id === updatedEntry.prediction_id ? updatedEntry : entry
+    );
+    setFilteredHistory(newEntries);
+    await addCheckup(updatedEntry);
+    try {
+      await addCheckup(updatedEntry);
+    } catch (error) {
+      console.error("Failed to save to IndexedDB:", error);
+    }
+  }; 
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -576,7 +588,7 @@ console.log("filteredhistory: ", filteredHistory, history)
                   <ShapAnalytics history={filteredHistory} />
                 )}
 
-                <HistoryTable entries={filteredHistory} isLoading={loading} />
+                <HistoryTable entries={filteredHistory} isLoading={loading} onEntryUpdate={handleEntryUpdate} />
 
                 {hasMore && cursor && (
                   <div className="text-center">

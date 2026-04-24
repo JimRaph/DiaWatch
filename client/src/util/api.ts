@@ -1,4 +1,3 @@
-// api.ts
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { HistoryResponse, PredictionResultProps } from "../types";
 
@@ -62,7 +61,7 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        console.log("token expired, refreshing silently...");
+        // console.log("token expired, refreshing silently...");
         const { data } = await axios.post(
           `${API_BASE}/auth/refresh`,
           {},
@@ -73,7 +72,7 @@ apiClient.interceptors.response.use(
         );
 
         accessToken = data.access_token;
-        console.log("refresh successful, retrying original request...");
+        // console.log("refresh successful, retrying original request...");
 
         processQueue(null, accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -83,7 +82,6 @@ apiClient.interceptors.response.use(
         processQueue(refreshError as AxiosError, null);
         accessToken = null;
 
-        // CRITICAL FIX: Clear localStorage on refresh failure
         if (isBrowser) {
           localStorage.removeItem("dw_auth");
           window.dispatchEvent(new Event("auth:session_expired"));
@@ -199,7 +197,6 @@ export const api = {
     try {
       await apiClient.post("/auth/logout");
     } catch (error) {
-      // Ignore logout errors (token might already be expired)
       console.error("Logout error:", error);
     } finally {
       accessToken = null;

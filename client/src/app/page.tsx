@@ -32,7 +32,7 @@ export default function Home() {
 
   useEffect(() => {
     const handlePredictionComplete = (event: CustomEvent) => {
-      console.log("Prediction complete:", event.detail);
+      // console.log("Prediction complete:", event.detail);
       setResult(event.detail);
     };
 

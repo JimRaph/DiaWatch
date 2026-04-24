@@ -43,15 +43,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Verify session with server
     const verifyAuth = async () => {
       try {
-        console.log("verify auth")
+        // console.log("verify auth")
         const success = await api.refreshToken();
         setIsAuthenticated(success);
         if (!success) {
-          console.log("not success")
+          // console.log("not success")
           localStorage.removeItem("dw_auth");
         }
       } catch {
-        console.log("catch auth")
+        // console.log("catch auth")
         setIsAuthenticated(false);
         localStorage.removeItem("dw_auth");
       } finally {

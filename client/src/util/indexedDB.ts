@@ -30,9 +30,7 @@ interface DiaWatchDB extends DBSchema {
 
 export async function getDB() {
   return openDB<DiaWatchDB>(DB_NAME, 2, {
-    // <-- Changed from 1 to 2
     upgrade(db, oldVersion) {
-      // Create checkups store (version 1)
       if (oldVersion < 1) {
         const store = db.createObjectStore(STORE_NAME, {
           keyPath: "prediction_id",
@@ -40,7 +38,6 @@ export async function getDB() {
         store.createIndex("by-timestamp", "timestamp");
       }
 
-      // Create syncQueue store (version 2)
       if (oldVersion < 2) {
         db.createObjectStore(SYNC_QUEUE_STORE, { keyPath: "predictionId" });
       }
@@ -56,7 +53,7 @@ export function getConfidence( scores: CheckupEntry["confidence_scores"],
     Prediabetes: "prediabetes",
     Diabetes: "diabetes",
   } as const;
-  console.log("get confidence: ", scores, label)
+  // console.log("get confidence: ", scores, label)
   return scores[map[label]];
 }
 
@@ -64,7 +61,7 @@ export async function addCheckup(
   entry: CheckupEntry,
   syncPending: boolean = false
 ) {
-  console.log("Adding checkup to IndexedDB:", entry);
+  // console.log("Adding checkup to IndexedDB:", entry);
   const db = await getDB();
 
   const count = await db.count(STORE_NAME);
@@ -77,14 +74,14 @@ export async function addCheckup(
     );
   }
 
-  console.log("add to db")
+  // console.log("add to db")
   await db.put(STORE_NAME, {
     ...entry,
     _accessedAt: Date.now(),
     _syncPending: syncPending,
   });
 
-  console.log("data added to db")
+  // console.log("data added to db")
   if (syncPending) {
     await db.put(SYNC_QUEUE_STORE, {
       predictionId: entry.prediction_id,
@@ -163,10 +160,10 @@ export async function syncPendingEntries(api: any) {
               e
             );
           }
-          console.log(
-            "Max retries reached, removed from queue:",
-            item.predictionId
-          );
+          // console.log(
+          //   "Max retries reached, removed from queue:",
+          //   item.predictionId
+          // );
         } else {
           try {
             await db.put(SYNC_QUEUE_STORE, {

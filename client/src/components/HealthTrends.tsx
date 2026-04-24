@@ -63,7 +63,7 @@ export function HealthTrends({ history }: HealthTrendsProps) {
     }
   };
 
-  console.log("Recent Entries: ", recentEntries);
+  // console.log("Recent Entries: ", recentEntries);
 
   return (
     <div className="mt-12 card p-8">

@@ -20,7 +20,7 @@ interface ResultModalProps {
 }
 
 export default function ResultModal({ result, onClose }: ResultModalProps) {
-  console.log("Result from result modal: ", result);
+  // console.log("Result from result modal: ", result);
 
   if (!result || !result.confidence_scores || !result.prediction_label) {
     return (
@@ -100,7 +100,7 @@ export default function ResultModal({ result, onClose }: ResultModalProps) {
     ] || 0) * 100
   );
 
-  console.log("result from result modal: ", result);
+  // console.log("result from result modal: ", result);
 
   return (
     <motion.div
