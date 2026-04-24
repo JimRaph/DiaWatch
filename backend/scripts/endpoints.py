@@ -63,20 +63,22 @@ async def predict(
         )
     user_id = None
     is_guest = True
-    guest_id = None
+    active_guest_id = None
 
     if current_user:
         print(f"current user: {current_user.id}")
         user_id = current_user.id
         is_guest = False
     else:
-        guest_id = guest_id_cookie
         is_guest = True
 
-        if not guest_id_cookie:
+        if guest_id_cookie and guest_id_cookie != "None":
+            active_guest_id = guest_id_cookie
+        else:
+            active_guest_id = str(uuid7())
             response.set_cookie(
                 key="guest_id",
-                value=guest_id,
+                value=active_guest_id,
                 httponly=True,
                 secure=True,
                 # secure=False,
@@ -133,14 +135,12 @@ async def predict(
                 explanations, key=lambda x: abs(x["impact"]), reverse=True
             )[:3],
             model_version=inference_engine.get_model_version(),
-            guest_id=guest_id,
+            guest_id=active_guest_id,
             timestamp=datetime.now(timezone.utc).isoformat(),
             verification_status="pending",
             actual_class=None,
             feedback_timestamp=None,
         )
-
-        # user_id = current_user.id if current_user else None
 
         background_tasks.add_task(
             persist_prediction,
@@ -150,7 +150,7 @@ async def predict(
             explanations=explanations,
             user_id=user_id,
             is_guest=is_guest,
-            guest_id=guest_id,
+            guest_id=active_guest_id,
         )
 
         logger.info(f"Prediction {prediction_id} | User: {user_id or 'Guest'}")

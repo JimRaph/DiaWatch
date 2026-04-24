@@ -35,19 +35,19 @@ export default function CTA({ onStartAnalysis }: CTAProps) {
             <span className="text-sm font-semibold">TAKE CONTROL TODAY</span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Don't Wait for Symptoms
           </h2>
           <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
             Prediabetes often has no warning signs. A 30-second screening today
-            could add years to your life.
+            could add years to your life. 
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
          
               <button
                 onClick={onStartAnalysis}
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-teal-600 font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-2xl"
+                className="inline-flex items-center justify-center px-8 py-3 bg-white text-teal-600 font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-2xl"
               >
                 Start Free Screening
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -56,7 +56,7 @@ export default function CTA({ onStartAnalysis }: CTAProps) {
 
             <Link
               href="/history"
-              className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors"
+              className="inline-flex items-center justify-center px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors"
             >
               View History
             </Link>

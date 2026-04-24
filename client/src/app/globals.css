@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --color-primary: 20 184 166;
   --color-primary-dark: 15 118 110;
   --color-accent: 14 165 233;
@@ -20,7 +20,7 @@
 
   --card-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
   --accent-gradient: linear-gradient(135deg, #f97316 0%, #eab308 100%);
-}
+} */
 
 /* :root {
  --background: var(--background-light);
@@ -40,7 +40,7 @@
   }
 }
 
-body {
+body {    
   background-color: rgb(var(--background));
   color: rgb(var(--foreground));
   font-family:
@@ -73,7 +73,7 @@ body {
 @custom-variant dark (&:where(.dark, .dark *));
 
 .btn-primary {
-  @apply bg-teal-500 text-white font-bold py-4 px-8 rounded-xl 
+  @apply bg-teal-500 text-white font-bold py-4 px-4 rounded-xl 
  transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 
  hover:bg-teal-600 active:scale-95  w-full
  focus:outline-none uppercase tracking-wide;
@@ -83,7 +83,7 @@ body {
                  rounded-xl hover:bg-teal-50 dark:hover:bg-teal-900/20 
                  transition-colors */
 .btn-secondary {
-  @apply text-teal-600 py-3 px-6 w-full dark:text-teal-400 font-semibold 
+  @apply text-teal-600 py-4 px-4 w-full dark:text-teal-400 font-semibold 
  hover:bg-teal-50 dark:hover:bg-teal-900/20 border-teal-500 border-2
  rounded-lg transition-all duration-300 shadow-md hover:shadow-lg 
  hover:-translate-y-0.5 active:scale-95;
@@ -96,7 +96,7 @@ body {
 }
 
 .input-field {
-  @apply w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl 
+  @apply w-full p-2 border-2 border-gray-200 dark:border-gray-700 rounded-xl 
  bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
  focus:outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-500/20
  transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500;
@@ -115,25 +115,25 @@ body {
  border border-gray-100 dark:border-gray-700 transition-all duration-300;
 }
 
-.card-hover {
+/* .card-hover {
   @apply hover:shadow-2xl hover:-translate-y-1 hover:border-teal-200 dark:hover:border-teal-800;
-}
+} */
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 5px;
-}
+} */
 
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
   @apply bg-gray-100 dark:bg-gray-800;
-}
+} */
 
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   @apply bg-teal-400 rounded-full;
-}
-
+} */
+/* 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-teal-500;
-}
+} */
 
 @keyframes float {
   0%,
@@ -149,7 +149,7 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
-@keyframes pulse-glow {
+/* @keyframes pulse-glow {
   0%,
   100% {
     opacity: 1;
@@ -161,13 +161,13 @@ body {
 
 .pulse-glow {
   animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
+} */
 
 .gradient-text {
   @apply text-teal-600 dark:text-teal-400;
 }
 
-.badge {
+/* .badge {
   @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
 }
 
@@ -185,9 +185,9 @@ body {
 
 .badge-info {
   @apply bg-sky-100 dark:bg-sky-900/30 text-sky-800 dark:text-sky-300;
-}
+} */
 
-@keyframes health-pulse {
+/* @keyframes health-pulse {
   0%,
   100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
@@ -199,4 +199,4 @@ body {
 
 .health-pulse {
   animation: health-pulse 2s infinite;
-}
+} */

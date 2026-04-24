@@ -25,14 +25,14 @@ export default function HeroSection({ onStartAnalysis }: HeroSectionProps) {
                 AI-POWERED HEALTH INSIGHTS
               </span>
             </div>
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
               <span className="text-gray-900 dark:text-white">
                 Take Control of Your
               </span>
               <br />
               <span className="gradient-text">Diabetes Risk</span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
               Get professional, AI-driven insights into your diabetes risk. Our
               advanced algorithms analyze multiple factors to provide
               personalized recommendations for better health management.
@@ -55,27 +55,27 @@ export default function HeroSection({ onStartAnalysis }: HeroSectionProps) {
                 <span>View History</span>
               </Link>
             </div>
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 text-2xl gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">99.8%</div>
+                <div className="font-bold gradient-text">99.8%</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Accuracy
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">24/7</div>
+                <div className="font-bold gradient-text">24/7</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Availability
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">100%</div>
+                <div className=" font-bold gradient-text">100%</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Secure
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">1min</div>
+                <div className=" font-bold gradient-text">1min</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Results
                 </div>
