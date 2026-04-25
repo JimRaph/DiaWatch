@@ -23,13 +23,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  // CRITICAL FIX: Initialize to null (unknown) to prevent hydration mismatch
-  // localStorage is checked in useEffect after mount
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  // Check localStorage only after mount (client-side only)
+  //  localStorage only after mount 
   useEffect(() => {
     setMounted(true);
     const hasSessionFlag = localStorage.getItem("dw_auth");
@@ -40,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Verify session with server
+
     const verifyAuth = async () => {
       try {
         // console.log("verify auth")
@@ -62,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     verifyAuth();
   }, []);
 
-  // Session expired handler (for 401 responses from api.ts interceptor)
+
   const handleSessionExpired = useCallback(() => {
     setIsAuthenticated(false);
     setIsLoading(false);
@@ -87,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       setIsAuthenticated(false);
       setIsLoading(false);
-      throw error; // Re-throw so components can catch and show error
+      throw error;
     }
   };
 
@@ -111,15 +110,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await api.logout();
     } finally {
-      // Always clear state even if API fails
+      //  clear state even if API fails
       setIsAuthenticated(false);
       setIsLoading(false);
       router.push("/");
     }
   };
 
-  // Prevent hydration mismatch by not rendering children until mounted
-  // This ensures server and client initial render match
+
   if (!mounted) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
