@@ -19,7 +19,7 @@ request_id_context = contextvars.ContextVar("request_id", default="N/A")
 
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
 MLFLOW_MODEL_NAME = os.getenv("MLFLOW_MODEL_NAME", "DiaWatch_Medical_System")
-# CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+CORS_ORIGINSS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000")
 
 
@@ -46,12 +46,16 @@ root_logger.addHandler(handler)
 
 logger = logging.getLogger(__name__)
 
+print(f"origin: {CORS_ORIGINS}")
+print(f"origins: {CORS_ORGINSS}")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager for startup/shutdown."""
 
     logger.info("Starting up DiaWatch API...")
+    logger.info(f"origin: {CORS_ORIGINS}")
+    logger.info(f"origins: {CORS_ORGINSS}")
 
     try:
         init_db()
