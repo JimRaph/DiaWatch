@@ -10,6 +10,15 @@ const nextConfig = {
     }
     return config;
   },
+
+async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://ej4u-diawatch.hf.space/:path*',
+      },
+    ]
+  },  
 };
 
 export default nextConfig;
